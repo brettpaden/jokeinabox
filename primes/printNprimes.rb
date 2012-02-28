@@ -10,7 +10,8 @@ end
 
 primes = [2]
 candidate = 3
-while primes.length < 100
+number_to_print = ARGV[0].to_i || 100
+while primes.length < number_to_print
   primes << candidate if is_prime?(candidate, primes)
   candidate += 2;
 end
