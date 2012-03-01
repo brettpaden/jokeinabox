@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 	@user = User.new
     end
     def create
-	@user = User.net(params[:user])
+	@user = User.new(params[:user])
 	if @user.save
 	    redirect_to root_url, :notice => "Signed up!"
 	else
