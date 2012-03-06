@@ -1,0 +1,32 @@
+<h1>Listing jokes</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+	<th>Mine</th>
+    <th>MyVote</th>
+	<th>Votes</th>
+    <th>Content</th>
+  </tr>
+
+<h3><%= "Current user is: " + @current_user.name + "(" + @current_user.id.to_s + ")" %></h3>
+
+<% @jokes.each do |joke| %>
+  <tr>
+		<td><%= joke.user.name %></td>
+		<td><%= joke.my_joke? @current_user.id %></td>
+		<td><%= case joke.my_vote@current_user.id when true then "Yes" when false then "No" end %></td>
+		<td><%= joke.votes.count.to_s %></td>
+		<td><%= joke.content %></td>
+		<td><%= link_to 'Vote Yes', joke, method: :vote_yes %></td>
+		<td><%= link_to 'Vote No', joke, method: :vote_no %></td>
+		<td><%= link_to 'Show', joke %></td>
+		<td><%= link_to 'Edit', edit_joke_path(joke) %></td>
+		<td><%= link_to 'Destroy', joke, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Joke', new_joke_path %>
