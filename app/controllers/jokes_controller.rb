@@ -1,21 +1,17 @@
 class JokesController < ApplicationController
-	def initialize
-		super
-#		Joke.all.each do |j| j.destroy end
-#		User.all.each do |u| u.destroy end
-		if User.count == 0
-			@current_user = User.new
-			@current_user.name = "colin"
-			@current_user.save or throw "unable to save user" 
-		else 
-			@current_user = User.all[0]
-		end
-	end
-	
-  # GET /jokesq	
+  before_filter :authenticate
+
+  # GET /jokes	
   # GET /jokes.json
   def index
-    @jokes = Joke.all
+    order = 'total_votes DESC, when_submitted DESC'
+    conditions = ''
+    if !params[:what] then params[:what] = session[:what] or 'top' end
+    if params[:what] == 'recent' then order = 'when_submitted DESC, total_votes DESC' end
+    if params[:what] == 'mine' then conditions = "user_id = #{session[:user].id}" end
+    session[:what] = params[:what]
+
+    @jokes = Joke.find(:all, :order => order, :conditions => conditions)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -54,11 +50,12 @@ class JokesController < ApplicationController
   # POST /jokes.json
   def create
     @joke = Joke.new(params[:joke])
-	@joke.user_id = @current_user.id
-	
+    @joke.user_id = session[:user].id
+    @joke.when_submitted = Time.now
+
     respond_to do |format|
       if @joke.save
-        format.html { redirect_to @joke, notice: 'Joke was successfully created.' }
+        format.html { redirect_to jokes_path }
         format.json { render json: @joke, status: :created, location: @joke }
       else
         format.html { render action: "new" }
@@ -71,6 +68,7 @@ class JokesController < ApplicationController
   # PUT /jokes/1.json
   def update
     @joke = Joke.find(params[:id])
+    @joke.when_submitted = Time.now
 
     respond_to do |format|
       if @joke.update_attributes(params[:joke])

@@ -8,15 +8,11 @@ class Joke < ActiveRecord::Base
   belongs_to :user
   has_many :votes, :dependent => :destroy
 	
-  def my_joke?(curr_id)
-	user_id == curr_id
+  def my_joke?(current_user_id)
+	user_id == current_user_id
   end
   
-  def my_vote(curr_id)
-	if v = votes.find { |v| v.user_id == curr_id && v.joke_id == id }
-		v.yesno
-	else
-		nil
-	end
+  def my_vote(current_user_id)
+     votes.find { |v| v.user_id == current_user_id && v.joke_id == id }
   end
 end

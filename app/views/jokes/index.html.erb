@@ -1,32 +1,80 @@
-<h1>Listing jokes</h1>
+<h1>Welcome to Joke-In-A-Box, <%= "#{session[:user].name.capitalize}!" %></h1>
+
+<h2>Tell us a joke, funny man!</h2>
+
+<% @joke = Joke.new %>
+
+<%= render 'form' %>
+<br />
 
 <table>
   <tr>
-    <th>User</th>
-	<th>Mine</th>
-    <th>MyVote</th>
-	<th>Votes</th>
-    <th>Content</th>
+    <td><%= (params[:what]) == 'top' ? 'Top Jokes' : link_to('Top Jokes', :controller => 'jokes', :what => 'top') %>&nbsp;</td>
+    <td><%= (params[:what]) == 'mine' ? 'My Jokes' : link_to('My Jokes', :controller => 'jokes', :what => 'mine') %>&nbsp;</td>
+    <td><%= (params[:what]) == 'recent' ? 'Recent Jokes' : link_to('Recent Jokes', :controller => 'jokes', :what => 'recent') %></td>
   </tr>
+<table>
 
-<h3><%= "Current user is: " + @current_user.name + "(" + @current_user.id.to_s + ")" %></h3>
+<table border="1">
 
-<% @jokes.each do |joke| %>
-  <tr>
-		<td><%= joke.user.name %></td>
-		<td><%= joke.my_joke? @current_user.id %></td>
-		<td><%= case joke.my_vote@current_user.id when true then "Yes" when false then "No" end %></td>
-		<td><%= joke.votes.count.to_s %></td>
-		<td><%= joke.content %></td>
-		<td><%= link_to 'Vote Yes', joke, method: :vote_yes %></td>
-		<td><%= link_to 'Vote No', joke, method: :vote_no %></td>
-		<td><%= link_to 'Show', joke %></td>
-		<td><%= link_to 'Edit', edit_joke_path(joke) %></td>
-		<td><%= link_to 'Destroy', joke, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
+  <% @jokes.each do |joke| %>
+    <% my_joke = joke.my_joke?(session[:user].id) %>
+    <% my_vote = joke.my_vote session[:user].id %>      
+    <% button1 = my_vote && my_vote.yesno ? 'Vote No' : 'Vote Yes' %>
+    <% value1 = my_vote ? !my_vote.yesno : true %>
+    <% button2 = my_vote ? 'Withdraw' : 'Vote No' %>
+    <% value2 = my_vote ? nil : false %>
+
+    <tr>
+      <td>
+        <% if !my_joke then %>
+          <table>
+            <tr>
+              <td><%= 'My vote: ' %><strong><%= (my_vote ? (my_vote.yesno ? 'Yes' : 'No') : '') %></strong></td> 
+            </tr>
+            <tr>
+              <td>
+                <% @vote1 = my_vote ? my_vote : Vote.new %> 
+                <%= form_for(@vote1) do |f| %> 
+                  <%= f.hidden_field :joke_id, :value => joke.id %> 
+                  <%= f.hidden_field :yesno, :value => value1 %>
+                  <%= f.submit button1 %> 
+                <% end %> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <% @vote2 = my_vote ? my_vote : Vote.new %> 
+                <%= form_for(@vote2, :method => (my_vote ? :delete : :post)) do |f| %> 
+                  <%= f.hidden_field :joke_id, :value => joke.id %> 
+                  <%= f.hidden_field :yesno, :value => value2 %> 
+                  <%= f.submit button2 %> 
+                <% end %> 
+              </td>
+            </tr>
+          </table>
+        <% end %>
+      </td>
+      <td>
+        <table>
+          <tr>              
+            <td colspan="3" align="right"><%= "YES: "%><strong><%= "#{joke.yes_votes}" %></strong>&nbsp;&nbsp;&nbsp;&nbsp;<%= "NO: " %><strong><%= "#{joke.no_votes}" %></strong></td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <%= form_for(joke) do |f| %>
+                <%= f.text_area :content, :size => '80x5', :readonly => true %>
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td><%= if my_joke then link_to 'Remove', joke, :confirm => 'Aw, give this joke a chance! Are you sure you want to delete this joke?', :method => :delete end %></td>
+            <td align="right"><%= "By: " %><strong><%= "#{(my_joke ? 'ME' : joke.user.name.capitalize)}" %></strong><%= " (#{joke.when_submitted.getlocal.strftime('%m/%d/%y %H:%M')})" %></td>
+          </tr>
+        </table>
+      </td> 
+    </tr>
+  <% end %>
 </table>
 
-<br />
 
-<%= link_to 'New Joke', new_joke_path %>
