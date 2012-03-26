@@ -1,0 +1,26 @@
+<script>
+$(function() {
+  // Handle event tooltips
+  $('.event_joke_tooltip').hide();
+  $('.trigger').hover(mouseOverEvent, mouseOutEvent);
+   
+  // Handle event joke link
+  $('.trigger a').click(onEventJoke);
+   
+  // Begin polling server for recent events
+  pollRecentEvents(); 
+});
+</script>
+
+<% u = session[:user] %>
+
+<div class="indented">
+  <div class="events">
+    <% @events.each do |e| %>
+      <div id="event_div<%= e.id %>" class="event_div">
+        <%= render :partial => 'one_event', :locals => {:event => e} %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

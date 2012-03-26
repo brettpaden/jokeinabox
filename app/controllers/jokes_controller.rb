@@ -3,15 +3,12 @@ class JokesController < ApplicationController
 
   # GET /jokes	
   # GET /jokes.json
-  def index
-    order = 'total_votes DESC, when_submitted DESC'
-    conditions = ''
-    if !params[:what] then params[:what] = session[:what] or 'top' end
-    if params[:what] == 'recent' then order = 'when_submitted DESC, total_votes DESC' end
-    if params[:what] == 'mine' then conditions = "user_id = #{session[:user].id}" end
+  def index    
+    if !params[:what] || (params[:what] == 'mine' && !session[:user]) then
+      params[:what] = session[:what] || 'top' 
+    end
+    @jokes = Joke.jokes_by_what(params[:what], session[:user] ? session[:user].id : nil)
     session[:what] = params[:what]
-
-    @jokes = Joke.find(:all, :order => order, :conditions => conditions)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -52,9 +49,10 @@ class JokesController < ApplicationController
     @joke = Joke.new(params[:joke])
     @joke.user_id = session[:user].id
     @joke.when_submitted = Time.now
-
     respond_to do |format|
       if @joke.save
+        @event = Event.new(:joke_id => @joke.id)
+        @event.save
         format.html { redirect_to jokes_path }
         format.json { render json: @joke, status: :created, location: @joke }
       else
@@ -86,9 +84,27 @@ class JokesController < ApplicationController
   def destroy
     @joke = Joke.find(params[:id])
     @joke.destroy
-
+    @event = Event.new(:user_id => session[:user].id, :joke_id => @joke.id)
+    @event.save
+    
     respond_to do |format|
       format.html { redirect_to jokes_url }
+      format.json { head :ok }
+    end
+  end
+  
+  # GET /jokes/header
+  def header
+    respond_to do |format|
+      format.html 
+      format.json { head :ok }
+    end
+  end
+
+  # GET /jokes/header_and_jokes
+  def header_and_jokes
+    respond_to do |format|
+      format.html 
       format.json { head :ok }
     end
   end

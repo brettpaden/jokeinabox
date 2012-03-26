@@ -1,6 +1,10 @@
 class User < ActiveRecord::Base
-  validates :name,  :presence => true, :uniqueness => true
+  attr_accessible :name, :password
 
-	has_many :jokes
-	has_many :votes
+  validates :name,  :presence => true, :uniqueness => true
+  validates :password, :presence => true
+  
+	has_many :votes, :dependent => :destroy
+  has_many :jokes, :dependent => :destroy  
+  has_many :events, :dependent => :destroy
 end

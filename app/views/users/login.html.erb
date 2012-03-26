@@ -1,0 +1,13 @@
+<script>
+$(function() {
+  // Handle login click
+  $('.new_user').submit(onLogin);
+});
+</script>
+
+<div class="indented" width="250" height="250">
+  <h1>Log on in, joker!</h1>
+
+  <%= render :partial => 'form', :locals => {:button_text => 'Login!', :login => true} %>
+</div>
+

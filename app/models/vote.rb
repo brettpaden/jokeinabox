@@ -4,9 +4,12 @@ class Vote < ActiveRecord::Base
   validates :joke_id, :presence => true
   validates :user_id, :presence => true
   validates_inclusion_of :yesno, :in => [true, false]
-  validates_associated :joke
-  validates_associated :user
+  validates_associated :joke, :user
 	
   belongs_to :joke, :autosave => true
   belongs_to :user
+
+  def vote_text
+    yesno ? 'Yes' : 'No'
+  end
 end

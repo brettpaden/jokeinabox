@@ -49,10 +49,17 @@ class VotesController < ApplicationController
     @vote.joke.total_votes = @vote.joke.yes_votes - @vote.joke.no_votes
 
     respond_to do |format| 
+$log.debug("CREATING")
+$log.debug(@vote.inspect)
+
       if @vote.save 
+$log.debug('SAVE OK')
+        @event = Event.new(:user_id => session[:user].id, :joke_id => @vote.joke_id, :yesno => @vote.yesno)
+        @event.save
         format.html { redirect_to jokes_path } 
         format.json { render json: @vote, status: :created, location: @vote } 
       else
+$log.debug(@vote.errors.inspect)
         format.html { render action: "new" } 
         format.json { render json: @vote.errors, status: :unprocessable_entity } 
       end 
@@ -73,10 +80,16 @@ class VotesController < ApplicationController
     @vote.joke.total_votes = @vote.joke.yes_votes - @vote.joke.no_votes
 
     respond_to do |format| 
+$log.debug("UPDATING")
+$log.debug(@vote.inspect)
       if @vote.update_attributes(params[:vote])
+$log.debug("UPDATE OK")
+        @event = Event.new(:user_id => session[:user].id, :joke_id => @vote.joke_id, :yesno => @vote.yesno)
+        @event.save
         format.html { redirect_to jokes_path } 
         format.json { head :ok } 
       else 
+$log.debug(@vote.errors.inspect)
         format.html { render action: "edit" } 
         format.json { render json: @vote.errors, status: :unprocessable_entity } 
       end 
@@ -94,8 +107,12 @@ class VotesController < ApplicationController
     end
     @vote.joke.total_votes = @vote.joke.yes_votes - @vote.joke.no_votes
 
+$log.debug("DELETING");
     (@vote.joke.save and @vote.destroy) or throw "unable to delete vote"
- 
+$log.debug("DELETE OK");
+    @event = Event.new(:user_id => session[:user].id, :joke_id => @vote.joke_id, :withdraw => true)
+    @event.save
+    
     respond_to do |format| 
       format.html { redirect_to jokes_path } 
       format.json { head :ok } 

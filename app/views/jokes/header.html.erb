@@ -1,0 +1,43 @@
+<script>
+
+$(function() {
+  // Master popup seems to need to display once or it gives incorrect size
+  // on first real display, not sure why...
+  window.top.$('#master_popup').hide().text('x');
+
+  // Handle logout/login/join links
+  $('#logout').click(onLogout);
+  $('#login').click(onLoginPopup);
+  $('#join').click(onJoinPopup);
+});
+
+</script>
+
+<div class="header_bar">
+  <table>
+    <tr>
+      <td class="my_name">Joke In A Box</td>
+      <td class="header_center">
+        <% if !session[:user].nil? %>
+          <%= "Welcome, #{session[:user].name.capitalize}!" %>
+        <% end %>
+      </td>
+      <td class="header_right">
+        <% if session[:user] then %>
+          <span id="logout">
+            <%= link_to('Logout', logout_users_path, :class => 'header_link') %>
+          </span>
+        <% else %>
+          <span id="login">
+            <%= link_to('Login', login_users_path, :class => 'header_link') %>
+          </span>
+          <span class="header_sep_text">| </span>
+          <span id="join">
+            <%= link_to('Join', new_user_path, :class => 'header_link')%>  
+          </span>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+</div>
+

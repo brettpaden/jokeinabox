@@ -1,0 +1,28 @@
+<% u = session[:user] %>
+
+<%= render :partial => 'jokes/header', 
+           :locals => {:welcome_ok => true, :login_ok => true, :join_ok => true, :u => u} %>
+
+<div class="indented">
+  <h1>Listing users</h1>
+ 
+  <table>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+ 
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?',
+                                         :method => :delete %></td>
+      </tr>
+    <% end %>
+  </table>
+ 
+  <br />
+ 
+  <%= link_to 'New user', new_user_path %>
+  
+</div>

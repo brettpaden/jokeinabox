@@ -1,14 +1,2 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <b>Name:</b>
-  <%= @joke.user.name %>
-</p>
-<p>
-  <b>Content:</b>
-  <%= @joke.content %>
-</p>
-
-
-<%= link_to 'Edit', edit_joke_path(@joke) %> |
-<%= link_to 'Back', jokes_path %>
+<%= render :partial => 'one_joke', :locals => {:u => session[:user], :joke => @joke} %>

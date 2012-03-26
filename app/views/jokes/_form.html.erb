@@ -1,10 +1,11 @@
 <%= form_for(@joke) do |f| %>
-  <% if @joke.errors.any? %>
+  <% errs = (@event && @event.errors.any?) ? @event.errors : @joke.errors %>
+  <% if errs.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@joke.errors.count, "error") %> prohibited this joke from being saved:</h2>
+      <h2><%= pluralize(errs.count, "error") %> prohibited this joke from being saved:</h2>
 
       <ul>
-      <% @joke.errors.full_messages.each do |msg| %>
+      <% errs.full_messages.each do |msg| %>
         <li><%= msg %></li>
       <% end %>
       </ul>
@@ -12,9 +13,11 @@
   <% end %>
 
   <div class="field">
-    <%= f.text_area :content, :size => '100x10' %>
+    <%= f.text_area :content, :class => 'new_joke_field', :title => 'Tell us a new joke, funny man!' %>
   </div>
   <div class="actions">
-    <%= f.submit "Submit" %>
+    <table><tr><td width="750px" align="right">
+      <%= f.submit "Submit", :class => 'action_button' %>
+     </td></tr></table>
   </div>
 <% end %>

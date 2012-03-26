@@ -1,0 +1,70 @@
+<table id="one_joke" class="one_joke">
+  <% my_joke = u && joke.my_joke?(u.id) %>
+  <% my_vote = u ? joke.my_vote(u.id) : nil %>      
+  <% button1 = my_vote && my_vote.yesno ? 'Vote No' : 'Vote Yes' %>
+  <% value1 = my_vote ? !my_vote.yesno : true %>
+  <% button2 = my_vote ? 'Withdraw' : 'Vote No' %>
+  <% value2 = my_vote ? nil : false %>
+  <tr>
+    <td class="joke_vote">
+      <% if u %>
+        <% if my_joke %>
+          <p class="vote_msg">Can't vote on your own joke!</p>
+        <% else %>
+          <table>
+            <tr>
+              <% vote_class = my_vote && my_vote.yesno ? 'yes_vote' : 'no_vote' %>
+              <% vote_text = my_vote ? my_vote.vote_text : '' %>
+              <td class="my_vote">
+                <%= 'My vote: ' %><span class="<%= vote_class %>"><%= vote_text %></span>
+              </td>
+            </tr>
+            <tr>
+              <td width="200px">
+                <% @vote1 = my_vote ? my_vote : Vote.new %> 
+                <%= form_for(@vote1) do |f| %> 
+                  <%= f.hidden_field :joke_id, :value => joke.id %> 
+                  <%= f.hidden_field :yesno, :value => value1 %>
+                  <%= f.submit button1, :class => 'vote_button' %> 
+                <% end %> 
+              </td>
+            </tr>
+            <tr>
+              <td width="200px">
+                <% @vote2 = my_vote ? my_vote : Vote.new %> 
+                <%= form_for(@vote2, :method => (my_vote ? :delete : :post)) do |f| %> 
+                  <%= f.hidden_field :joke_id, :value => joke.id %> 
+                  <%= f.hidden_field :yesno, :value => value2 %> 
+                  <%= f.submit button2, :class => 'vote_button' %> 
+                <% end %> 
+              </td>
+            </tr>
+          </table>
+        <% end %>
+      <% else %>
+        <p class="vote_msg">Can't vote till you login!</p>
+      <% end %>
+    </td>
+    <td>
+      <table>
+        <tr>              
+          <td colspan="2" align="right">
+            <%= "YES: "%><span class="yes_vote"><%= "#{joke.yes_votes}" %></span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <%= "NO: " %><span class="no_vote"><%= "#{joke.no_votes}" %></span>&nbsp;
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <%= form_for(joke) do |f| %>
+              <%= f.text_area :content, :size => '72x5', :readonly => true, :class => 'joke' %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td id='remove_joke'><%= if my_joke then link_to 'Remove', joke, :confirm => 'Aw, give this joke a chance! Are you sure you want to delete this joke?', :class => 'normal_link', :method => :delete end %></td>
+          <td align="right"><%= "By: " %><strong><%= "#{(my_joke ? 'ME' : (joke.user ? joke.user.name.capitalize : 'Nobody'))}" %></strong><%= " (#{joke.when_submitted.getlocal.strftime('%m/%d/%y %H:%M')})" %>&nbsp;</td>
+        </tr>
+      </table>
+    </td> 
+  </tr>
+</table>

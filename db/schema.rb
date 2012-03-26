@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120309081451) do
+ActiveRecord::Schema.define(:version => 20120316224434) do
+
+  create_table "events", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "joke_id"
+    t.boolean  "yesno"
+    t.boolean  "withdraw"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["joke_id"], :name => "index_events_on_joke_id"
+  add_index "events", ["user_id"], :name => "index_events_on_user_id"
 
   create_table "jokes", :force => true do |t|
     t.text     "content"
@@ -30,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20120309081451) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "password"
   end
 
   create_table "votes", :force => true do |t|

@@ -1,0 +1,41 @@
+// Place all the styles related to the Events controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "color_theme";
+
+.event_cell {
+  width: 200px;
+  border-bottom: {
+    style: solid;
+    width: 1px;
+    color: $light_gray;
+  }
+}
+
+.event_user {
+  font-weight: bold;
+}
+
+.event_time {
+  color: $medium_gray;
+  font-size: 10px;
+}
+
+.event_joke_tooltip {
+  border: {
+    width: 1px;
+    style: solid;
+    radius: 15px;
+  }
+  background-color: $lighter_blue;
+  opacity: 0.97;
+}
+
+.event_div {
+  border-bottom: {
+    width: 1px;
+    style: dotted;
+    color: $light_gray;
+  }
+}

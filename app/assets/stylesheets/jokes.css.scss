@@ -1,3 +1,384 @@
 // Place all the styles related to the Jokes controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import "color_theme";
+
+.my_body {
+  background: $light-blue;
+  margin: 0; 
+  border: 0;
+  padding: 0;
+  border-stye: none;
+  frameBorder: 0;
+}
+
+.my_iframe {
+  margin: 0;
+  frameBorder: 0;
+  padding: 0;
+  display: inline;
+}
+
+.header_bar {
+  background-color: $dark-purple;
+}
+
+.my_name {
+  color: $light-blue;
+  font: {
+    family: "comic sans ms", verdana, helvetica, arial, sans-serif;
+    weight: bold;
+    size: 18px;
+  }
+  line-height: 30px;
+  padding: 0;
+  padding-left: 20px;
+  text-shadow: #000 1px 1px 0px;
+  width: 130px;
+  border-style: none;
+  margin: 0;
+}
+
+@mixin header_text {
+  color: $light-blue;
+  font-family: verdana, helvetica, arial, sans-serif;
+  text-shadow: #000 1px 1px 0px;
+  margin: 0;
+  padding: 0;
+  border-style: none;
+}
+
+.header_center {
+  @include header_text;
+  font-size: 18px;
+  width: 450px;
+  text-align: center;
+}
+
+.header_right {
+  @include header_text;
+  text-align: right;
+  font-size: 14px;
+  width: 150px;
+}
+
+.header_sep_text {
+  color: #aaaaaa;
+  font-size: 12px;
+}
+
+.header_link {
+  font-family: verdana, helvetica, arial, sans-serif;
+  font-size: 14px;
+  text-shadow: #000 1px 1px 0px;
+  text-decoration: none;
+}
+
+.header_link:link {
+  &:link { color: $light-blue; }
+}
+
+.header_link:visited {
+  &:visited { color: $light-blue; }
+}
+
+.header_link:hover {
+  &:hover { 
+    color: $lighter-blue; 
+    background-color: transparent; 
+    text-decoration: underline; 
+    cursor: hand;
+  }
+}
+
+.header_link:active {
+  &:active { color: white; }
+}
+
+.normal_link {
+  font-family: verdana, helvetica, arial, sans-serif;
+  font-size: 13px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.normal_link:link {
+  &:link { color: $medium-gray; }
+}
+
+.normal_link:visited {
+  &:visited { color: $medium-gray; }
+}
+
+.normal_link:hover {
+  &:hover { 
+    color: $dark_gray;
+    background-color: transparent;
+    text-decoration: underline; 
+    cursor: hand;
+  }
+}
+
+.normal_link:active {
+  &:active { color: black; }
+}
+
+.selected_link {
+  color: $dark_gray;
+  font-weight: bold;
+}
+
+.new_joke {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.new_joke_field {
+  font-size: 14px;
+  width: 750px;
+  height: 150px;
+}
+
+.joke {
+  color: $dark_purple;
+  font-size: 14px;
+  background-color: transparent;
+  border: none;
+}
+
+.joke_vote {
+  border-right: {
+    color: $light_gray;
+    width: 1px;
+    style: dotted;
+  }
+  padding-right: 5px;
+  width: 110px;
+}
+    
+.action_button {
+  color: $light_blue;
+  background-color: $dark_purple;
+  text-shadow: #000 1px 1px 0px;
+  font-size: 16px;
+  cursor:pointer;
+  cursor:hand;
+  border-radius: 8px;
+}
+
+.action_button:hover {
+  &:hover {
+    color: $lighter_blue;
+    backgroud-color: $darker_purple;
+    cursor: hand;
+  }
+}
+
+.indented {
+  padding: 20px;
+}
+
+.hint {
+  color: gray;
+}
+
+.please_wait {
+  background-color: $light_yellow;
+  color: gray;
+  text-align: center;
+}
+
+.joke_cell {
+  border-bottom: {
+    style: solid;
+    color: $light-gray;
+    width: 1px;
+  }
+}
+
+.tabbedPanels {
+}
+
+.tabs {
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  float: left;
+  list-style: none;
+  margin-left: 2px;
+}
+
+.tabs li.leftmost {
+  margin-left: 0px;
+}
+
+.tabs a {
+  display: block;
+  text-decoration: none;
+  padding: 3px 5px;
+  border: {
+    style: solid;
+    color: $dark_purple;
+    width: 1px;
+    top: {
+      left-radius: 4px;
+      right-radius: 4px;
+    }
+  }
+  margin-bottom: -1px;
+    
+}
+
+@mixin tab_text {
+  background-color: $dark-red;
+  color: $light-blue;
+  font-family: verdana, helvetica, arial, sans-serif;
+  text-shadow: #000 1px 1px 0px;
+}
+
+.tabs a:link {
+  &:link {
+    @include tab_text;
+  }
+}
+
+.tabs a:visited {
+  &:visited {
+    @include tab_text;
+  }
+}
+
+.tabs a:hover {
+  &:hover {
+   color: $lighter_blue;
+   cursor:hand;
+  }
+}
+
+.tabs a.active {
+  background-color: white;
+  border-bottom: {
+    color: $light_blue;
+  }
+}
+
+@mixin active_tab_text {
+  color: $dark_purple;
+  background-color: $light_blue;
+  text-shadow: none;
+  font-weight: bold;
+}
+
+.tabs a.active:link {
+  &:link {
+    @include active_tab_text;
+  }
+}
+
+.tabs a.active:visited {
+  &:visited {
+    @include active_tab_text;
+  }
+}
+
+.panelContainer {
+  clear: left;
+  border: {
+    style:solid;
+    color: $medium_gray;
+    width: 1px;
+  }
+}
+
+@mixin light_border {
+  style:solid;
+  color: $light_gray;
+  width: 1px;
+}
+
+.joke_events {
+  border-left: {
+    @include light_border;
+  }
+  border-bottom: {
+    @include light_border;
+  }
+}
+
+.hidden_item {
+  font-size: 24px;
+}
+
+.master_popup {
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.login_popup {
+  background: $lighter_blue;
+  opacity: 0.95;
+  border: {
+    style: solid;
+    width: 1px;
+    radius: 15px;
+  }
+}
+
+.login_error {
+  margin: 20px;
+  color: $red;
+  font: {
+    weight: bold;
+    size: 14px;
+  }
+}
+
+.submit_popup {
+  color: $dark_gray;
+  background-color: $light_yellow;
+  border: {
+    style: solid;
+    width: 1px;
+    radius: 5px;
+  }
+  padding: 5px;
+}
+
+.delete_confirm_popup {
+  background-color: $light_yellow;
+  border: {
+    style: solid;
+    width: 1px;
+    radius: 5px;
+  }
+  padding: 5px;
+  opacity: 0.95;
+}
+
+.delete_confirm_button {
+  color: $light_blue;
+  background-color: $dark_purple;
+  text-shadow: #000 1px 1px 0px;
+  font-size: 16px;
+  cursor:pointer;
+  cursor:hand;
+  border-radius: 8px;
+}
+
+.delete_confirm_button:hover {
+  &:hover {
+    color: $lighter_blue;
+    backgroud-color: $darker_purple;
+    cursor: hand;
+  }
+}
+
+
+

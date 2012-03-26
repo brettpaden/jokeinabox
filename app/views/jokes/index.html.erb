@@ -1,80 +1,76 @@
-<h1>Welcome to Joke-In-A-Box, <%= "#{session[:user].name.capitalize}!" %></h1>
+<script>
+$(function() {
 
-<h2>Tell us a joke, funny man!</h2>
+  // Set new joke input to display hint text
+  $('.new_joke_field').inputHints(); 
+  
+  // Handle tab panels
+  $('.tabs a').click(onTab);
+  $('.tabs li:first a').click();
+  
+  // Handle joke buttons
+  $('#new_joke').submit(onSubmitJoke);
+  
+  // WARNING: any events bound to controls within the panel container need to be
+  // bound every time the container is refreshed (after a tab is clicked),
+  // binding set here will be erased!!!!  Found this out the hard way...
+});
+</script>
 
-<% @joke = Joke.new %>
+<% u = session[:user] %>
 
-<%= render 'form' %>
-<br />
-
+<div id="jokes">
 <table>
   <tr>
-    <td><%= (params[:what]) == 'top' ? 'Top Jokes' : link_to('Top Jokes', :controller => 'jokes', :what => 'top') %>&nbsp;</td>
-    <td><%= (params[:what]) == 'mine' ? 'My Jokes' : link_to('My Jokes', :controller => 'jokes', :what => 'mine') %>&nbsp;</td>
-    <td><%= (params[:what]) == 'recent' ? 'Recent Jokes' : link_to('Recent Jokes', :controller => 'jokes', :what => 'recent') %></td>
-  </tr>
-<table>
+    <td valign="top" width="775px">
+      <div class="new_joke">
+        <div id="new_joke_div" style="<%= u ? '' : 'display:none;' %>">
+          <% @joke = Joke.new %>
+          <%= render 'form' %>
+        </div>
+        <div id="login_to_tell_div" style="<%= u ? 'display:none;' : '' %>">
+          <h2 class='indented'><%= "You gotta be logged in to tell us a joke, funny man!" %></h2>
+        </div>
+      </div>
 
-<table border="1">
+      <div class="indented">
+        <div class="tabbedPanels">
+          <ul class="tabs">
+            <li class="leftmost" id="top_jokes_tab">
+              <%= link_to('Top Jokes', jokes_path+'?what=top') %>
+            </li>
+            <li id="my_jokes_tab" style="<%= u ? '' : 'display:none;' %>">
+              <%= link_to('My Jokes', jokes_path+'?what=mine') %>
+            </li>
+            <li id="recent_jokes_tab">
+              <%= link_to('Recent Jokes', jokes_path+'?what=recent') %>
+            </li>
+          </ul>
 
-  <% @jokes.each do |joke| %>
-    <% my_joke = joke.my_joke?(session[:user].id) %>
-    <% my_vote = joke.my_vote session[:user].id %>      
-    <% button1 = my_vote && my_vote.yesno ? 'Vote No' : 'Vote Yes' %>
-    <% value1 = my_vote ? !my_vote.yesno : true %>
-    <% button2 = my_vote ? 'Withdraw' : 'Vote No' %>
-    <% value2 = my_vote ? nil : false %>
-
-    <tr>
-      <td>
-        <% if !my_joke then %>
-          <table>
-            <tr>
-              <td><%= 'My vote: ' %><strong><%= (my_vote ? (my_vote.yesno ? 'Yes' : 'No') : '') %></strong></td> 
-            </tr>
-            <tr>
-              <td>
-                <% @vote1 = my_vote ? my_vote : Vote.new %> 
-                <%= form_for(@vote1) do |f| %> 
-                  <%= f.hidden_field :joke_id, :value => joke.id %> 
-                  <%= f.hidden_field :yesno, :value => value1 %>
-                  <%= f.submit button1 %> 
-                <% end %> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <% @vote2 = my_vote ? my_vote : Vote.new %> 
-                <%= form_for(@vote2, :method => (my_vote ? :delete : :post)) do |f| %> 
-                  <%= f.hidden_field :joke_id, :value => joke.id %> 
-                  <%= f.hidden_field :yesno, :value => value2 %> 
-                  <%= f.submit button2 %> 
-                <% end %> 
-              </td>
-            </tr>
+        <div class="panelContainer">
+          <div class="panel">
+            <% @jokes.each do |joke| %>
+              <div class="joke_cell">
+                <%= render :partial => 'one_joke', :locals => {:joke => joke, :u => u} %>
+              </div>
+            <% end %>
           </table>
-        <% end %>
-      </td>
-      <td>
-        <table>
-          <tr>              
-            <td colspan="3" align="right"><%= "YES: "%><strong><%= "#{joke.yes_votes}" %></strong>&nbsp;&nbsp;&nbsp;&nbsp;<%= "NO: " %><strong><%= "#{joke.no_votes}" %></strong></td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <%= form_for(joke) do |f| %>
-                <%= f.text_area :content, :size => '80x5', :readonly => true %>
-              <% end %>
-            </td>
-          </tr>
-          <tr>
-            <td><%= if my_joke then link_to 'Remove', joke, :confirm => 'Aw, give this joke a chance! Are you sure you want to delete this joke?', :method => :delete end %></td>
-            <td align="right"><%= "By: " %><strong><%= "#{(my_joke ? 'ME' : joke.user.name.capitalize)}" %></strong><%= " (#{joke.when_submitted.getlocal.strftime('%m/%d/%y %H:%M')})" %></td>
-          </tr>
-        </table>
-      </td> 
-    </tr>
-  <% end %>
+        </div>
+      </div>
+    </td>
+  </tr>
 </table>
-
-
+<div id="delete_confirm_popup" style="display:none">
+  <table>
+    <tr>
+      <td>Aw, c'mon joker, give this joke a chance! Do you really want to delete this joke?</td>
+    </tr>
+    <tr>
+      <td style="text-align:center">
+        <input type="button" id="remove_yes" value="Yes, I Do!" class="delete_confirm_button">
+        <input type="button" id="remove_no" value="No, I'll Give It A Chance" class="delete_confirm_button">
+      </td>
+    </tr>
+  </table>
+</div>
+</div>

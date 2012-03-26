@@ -1,9 +1,20 @@
 Jokeinabox::Application.routes.draw do
-  resources :jokes, :users, :votes
 
-  get "home/index"
+  get 'header', :controller => 'jokes', :action => 'header'
+  get 'header_and_jokes', :controller => 'jokes', :action => 'header_and_jokes'
+  
+  resources :users do
+    collection do
+      post 'logout'
+      get 'login'
+      post 'do_login'
+    end
+  end
 
-
+  resources :jokes
+  resources :votes 
+  resources :events
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -53,7 +64,7 @@ Jokeinabox::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'jokes#index'
+  root :to => 'jokes#main'
 
   # See how all your routes lay out with "rake routes"
 
