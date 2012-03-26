@@ -23621,3 +23621,22 @@ SAVE OK
 CREATING
 #<Vote id: nil, joke_id: 58, user_id: 29, yesno: true, created_at: nil, updated_at: nil>
 SAVE OK
+CREATING
+#<Vote id: nil, joke_id: 182, user_id: 27, yesno: true, created_at: nil, updated_at: nil>
+SAVE OK
+UPDATING
+#<Vote id: 243, joke_id: 182, user_id: 27, yesno: true, created_at: "2012-03-26 22:14:05", updated_at: "2012-03-26 22:14:05">
+UPDATE OK
+UPDATING
+#<Vote id: 243, joke_id: 182, user_id: 27, yesno: false, created_at: "2012-03-26 22:14:05", updated_at: "2012-03-26 22:14:13">
+UPDATE OK
+DELETING
+DELETE OK
+CREATING
+#<Vote id: nil, joke_id: 182, user_id: 27, yesno: true, created_at: nil, updated_at: nil>
+SAVE OK
+DELETING
+DELETE OK
+CREATING
+#<Vote id: nil, joke_id: 91, user_id: 27, yesno: true, created_at: nil, updated_at: nil>
+SAVE OK

@@ -131,7 +131,7 @@ function doAjaxPopup($this, url, style_class, submit_fn) {
 
 // Display login popup
 function onLoginPopup() {
-  doAjaxPopup($(this), '/users/login', 'login_popup', onLogin);
+  doAjaxPopup($(this), '/users/login .indented', 'login_popup', onLogin);
   return false;
 }
 
@@ -183,7 +183,7 @@ function onLogin() {
 
 // Display join popup
 function onJoinPopup() {
-  doAjaxPopup($(this), '/users/new', 'login_popup', onJoin);
+  doAjaxPopup($(this), '/users/new .indented', 'login_popup', onJoin);
   return false;
 }
 
@@ -245,7 +245,7 @@ function onJokeEvent(event, insert_id) {
   var $mp_div = window.top.$('#master_popup');
   if (remove && !add) {
     // Remove joke from the list
-    if ($cur_joke_form.length > 0) {
+    if ($cur_joke_form && $cur_joke_form.length > 0) {
       var $cell = $cur_joke_form.closest('.joke_cell'); 
       $cell.slideUp(500, function(){
         $cell.remove();
@@ -288,6 +288,8 @@ function onJokeEvent(event, insert_id) {
               $new_div.slideDown(500, function(){
                 // Handle vote buttons
                 $new_div.find('.vote_button').click(onVote);
+                // Handle remove links
+                $new_div.find('#remove_joke').click(onRemove);
                 // If user voted on this joke, jump to it
                 if (userSubmitted) {
                   // Remove submitting popup
@@ -309,6 +311,8 @@ function onJokeEvent(event, insert_id) {
             $new_div.slideDown(500, function(){
                // Handle vote buttons
                $new_div.find('.vote_button').click(onVote);
+               // Handle remove links
+               $new_div.find('#remove_joke').click(onRemove);
               // If user just submitted this joke, jump to it
               var $new_joke_content_div = $jokes_frame.contents().find('#new_joke_content');
               var new_content = $new_div.find('#joke_content').attr('value');
@@ -371,7 +375,7 @@ function doRemovePopup(left, top) {
     top: top,
     position: 'absolute'
   });
-  $mp_div.unbind('mouseleavel');
+  $mp_div.unbind('mouseleave');
   $mp_div.hide().fadeIn(100);
 }
 

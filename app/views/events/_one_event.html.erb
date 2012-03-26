@@ -3,7 +3,7 @@
 <% vote_text = event.yesno ? 'YES' : 'NO' %>
 <% vote_class = event.yesno ? 'yes_vote' : 'no_vote' %>
 <% joke_link = link_to('joke', joke_path(event.joke), :class => 'normal_link') if event.joke %>
-<span class="event_time"><%= event.created_at.getlocal.strftime('%m/%d/%y %H:%M') %><br/></span>
+<span class="event_time"><%= "#{event.created_at.getgm.strftime('%m/%d/%y %H:%M')} UTC" %><br/></span>
 <span class="event_user"><%= name %></span><%= ' ' %>
 <% if event.yesno != nil %>
   <%= " voted " %><span class="<%= vote_class %>"><%= vote_text %></span> on a <span class="trigger" data-tooltip="#tip<%= event.joke.id %>" id="e<%= event.id %>_j<%= event.joke.id %>"><%= joke_link %></span>.
