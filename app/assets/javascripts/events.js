@@ -12,7 +12,7 @@ function pollRecentEvents(oneTime) {
   evtTime = (Date.parse(evtTime)-60)/1000; // Allow 60 second time diff between server and client
   
   // What tab are we on?
-  what = whatTab();
+  var what = whatTab();
   
   // Poll for events more recent
   $.getJSON('/events', 'ts='+evtTime+'&what='+what, processRecentEvents);
@@ -49,14 +49,15 @@ function processRecentEvents(data) {
 
 // Handle mouseover on an event
 function mouseOverEvent() {
-  $this=$(this);
+  var $this=$(this);
   $this.data('timer', null);
   var timer = window.setTimeout(function() {
     var $mp_div = window.top.$('#master_popup'),
         $events_frame = window.top.$('#events_frame');
     $mp_div.empty();
-    $tip=$($this.attr('data-tooltip'));
-    $link=$this.find('a');
+    var $tt = $this.attr('data-tooltip');
+    var $tip = $this.parent().find($tt);
+    var $link=$this.find('a');
     var url = $link.attr('href');
     $tip.load(url+' .one_joke', '', function(data, status) {
       var ttTop,

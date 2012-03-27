@@ -19,6 +19,7 @@ class JokesController < ApplicationController
   # GET /jokes/1
   # GET /jokes/1.json
   def show
+$log.debug(params[:id])
     @joke = Joke.find(params[:id])
 
     respond_to do |format|
