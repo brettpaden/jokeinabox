@@ -1,22 +1,42 @@
 
+// Perform jokes initialization
+function onJokesLoad() {
+  var headerH = $('#header_div').outerHeight(),
+      screenH = $(window).outerHeight();
+
+  // Size jokes div to available space on screen
+  $('#jokes_div').css({
+    top: headerH+1,
+    height: screenH - headerH
+  });
+  
+  // Set new joke input to display hint text
+  $('.new_joke_field').inputHints(); 
+  
+  // Handle tab panels
+  $('.tabs a').on('click', onTab);
+  $('.tabs li:first a').click();
+  
+  // Handle joke buttons
+  $('#new_joke').on('submit', onSubmitJoke);
+  
+  // Handle vote and remove links
+  $pc = $('.panelContainer');
+  $pc.on('click', '.vote_button', onVote);
+  $pc.on('click', '#remove_joke a', onRemove);
+}
+
 // Handle joke tab 
-function onTab() {
+function onTab(e) {
   var $this = $(this);
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $pc = $jokes_frame.contents().find('.panelContainer');
-  var $tp = $jokes_frame.contents().find('.tabbedPanels');
+  var $pc = $('.panelContainer');
+  var $tp = $('.tabbedPanels');
   $pc.hide().attr('visibility', false);
   $tp.find('.tabs a.active').removeClass('active');
-  $this.addClass('active').blur();
+  $this.attr('class', 'active').blur();
   var url = $this.attr('href');
   $pc.load(url+' .panel', '', function(data, status) {
     $pc.fadeIn(50);
-
-    // Bind any events for controls within the panel here...
-    // Handle vote buttons
-    $pc.find('.vote_button').click(onVote);
-    // Handle remove links
-    $pc.find('#remove_joke').click(onRemove);
   });
   
   return false;
@@ -25,16 +45,43 @@ function onTab() {
 // Determine which tab is active
 function whatTab() {
   var $this = $(this);
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $tp = $jokes_frame.contents().find('.tabbedPanels');
+  var $tp = $('.tabbedPanels');
   return $tp.find('.tabs a.active').text();  
+}
+
+// Jump to joke in open table panel
+function jump_to_joke(joke_id) {
+  var id = 'edit_joke_' + joke_id;
+  var $pc = $('.panelContainer');
+  var $joke_forms = $pc.find('#'+id);
+  if ($joke_forms.length != 0) {
+    var $mp_div = $('#master_popup');
+    $mp_div.fadeOut(50);
+    var $joke_div = $joke_forms.first().closest('.one_joke');
+    var pos = $joke_div.offset();
+    var jokeH = $joke_div.outerHeight();
+    var scrollTop = $(document).scrollTop();
+    var windowH = window.innerHeight;
+    var windowSpace = scrollTop + windowH;
+    if ((pos.top < scrollTop) || (pos.top + jokeH > windowSpace)) {
+      $('html, body').animate({
+                              scrollTop: pos.top 
+                              }, 500);
+    }
+    $joke_forms.first().find('.joke').first().focus();
+  }
+}
+
+function doJokeEvents($obj) {
+  // Handle vote buttons and 'remove' links
+  $obj.find('.vote_button').on('click', onVote);
+  $obj.find('#remove_joke a').on('click', onRemove);
 }
 
 // Display or hide new joke field, depending on whether user is logged in
 function displayHideNewJoke(id) {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $new_joke = $jokes_frame.contents().find('#new_joke_div');
-  var $login_to_tell = $jokes_frame.contents().find('#login_to_tell_div');
+  var $new_joke = $('#new_joke_div');
+  var $login_to_tell = $('#login_to_tell_div');
   if (id == null) {
     // Hide new joke, show login message
     $new_joke.hide();
@@ -48,9 +95,8 @@ function displayHideNewJoke(id) {
   
 // Display or hide 'My Jokes' tab, depending on whether user is logged in
 function displayHideMyJokes(id) {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $pc = $jokes_frame.contents().find('.panelContainer');
-  var $tp = $jokes_frame.contents().find('.tabbedPanels');
+  var $pc = $('.panelContainer');
+  var $tp = $('.tabbedPanels');
   var $my_jokes = $tp.find('#my_jokes_tab');
   var $top_jokes = $tp.find('#top_jokes_tab');
   if (id == null) {
@@ -59,7 +105,7 @@ function displayHideMyJokes(id) {
     // If it's active, we need to active 'Top Jokes' instead
     if ($my_jokes.find('a.active').length > 0) {
       $tp.find('a.active').removeClass('active');
-      $top_jokes.find('a').addClass('active');
+      $top_jokes.find('a').attr('class', 'active');
     }
   } else {
     // Make sure 'My Jokes' is visible
@@ -69,22 +115,23 @@ function displayHideMyJokes(id) {
 
 // Re-display elements of jokes iframe when user has changed or logged out
 function onUserChange(id) {
+  // Remove popup
+  $('#master_popup').fadeOut(250);
+  
   // Reload header
-  var $hdr_jokes = window.top.$('#header_and_jokes_frame');
-  var $hdr = $hdr_jokes.contents().find('#header_frame');
-  var $jokes = $hdr_jokes.contents().find('#jokes_frame');
-  $hdr.attr('src', $hdr.attr('src'));
-
-  // Dispay/hide new joke field
-  displayHideNewJoke(id);
-  
-  // Change whether 'My Jokes' tab is available, based on whether we are logged in
-  displayHideMyJokes(id);
-  
-  // Reload active jokes tab  
-  var $active_tab = $jokes.contents().find('.tabbedPanels').find('.tabs a.active').first();
-  $active_tab.click(onTab);  // I don't understand why I have to add this, it should already be there!!!
-  $active_tab.click();
+  var $hdr = $('#header_div');
+  $hdr.load('/header', '', function(){
+    // Dispay/hide new joke field
+    displayHideNewJoke(id);
+    
+    // Change whether 'My Jokes' tab is available, based on whether we are logged in
+    displayHideMyJokes(id);
+    
+    // Reload active jokes tab  
+    var $active_tab = $('.tabbedPanels').find('.tabs a.active').first();
+    $active_tab.click(onTab);  // I don't understand why I have to add this, it should already be there!!!
+    $active_tab.click();
+  });
 }
 
 // Perform logout
@@ -98,7 +145,7 @@ function onLogout() {
 
 // Do popup dialog
 function doAjaxPopup($this, url, style_class, submit_fn) {
-  var $mp_div = top.window.$('#master_popup');
+  var $mp_div = $('#master_popup');
   $mp_div.empty();
   $mp_div.load(url, '', function(){
     var dlgLeft,
@@ -138,7 +185,7 @@ function onLoginPopup() {
 // Handle login error
 function loginError(msg) {
   var html = 'You must be joking!<br/>'+msg+'<br/>Try again, joker.'
-  var $mp_div = top.window.$('#master_popup');
+  var $mp_div = $('#master_popup');
   if ($mp_div.find('.login_error').length == 0) {
     $mp_div.prepend('<div class="login_error"></div>');
     $mp_div.find('.login_error').hide().html(html).slideDown(250);
@@ -214,8 +261,7 @@ function onJoin() {
 
 // Handle a joke event by updating jokes list
 function onJokeEvent(event, insert_id) {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $pc = $jokes_frame.contents().find('.panelContainer');
+  var $pc = $('.panelContainer');
  
   // Find id of the joke, and the joke to insert before
   if (insert_id != '+' && insert_id >= 0) {
@@ -225,13 +271,20 @@ function onJokeEvent(event, insert_id) {
     var $cur_joke_form = $pc.find('#edit_joke_'+event.joke_id);
   }
 
+  // What are we doing?
   var remove = false;
   var add = false;  
+  var change = false;
   if (event.yesno != null || event.withdraw) {
     // User voted on a joke, or withdrew a vote
-    // Possibly move the joke to a new order
-    remove = true;
-    add = true;
+    // Do we have 'Top Jokes' open?
+    if (whatTab() == 'Top Jokes') {
+      // Possibly move the joke to a new order
+      remove = true;
+      add = true;
+    } else {
+      change = true;
+    }
   } else if (!event.user_id) {
     // User added a joke
     // Add to jokes list
@@ -242,20 +295,20 @@ function onJokeEvent(event, insert_id) {
     remove = true;
   }
   
-  var $mp_div = window.top.$('#master_popup');
+  var fadeOutPacifier = true;
+  var $mp_div = $('#master_popup');
   if (remove && !add) {
     // Remove joke from the list
     if ($cur_joke_form && $cur_joke_form.length > 0) {
-      var $cell = $cur_joke_form.closest('.joke_cell'); 
+      var $cell = $cur_joke_form.closest('.joke_cell');
+      fadeOutPacifier = false; 
       $cell.slideUp(500, function(){
         $cell.remove();
         $mp_div.fadeOut(250);
       });
-    } else {
-      $mp_div.fadeOut(250);
-    }
+    } 
   } else if (add) {
-    // Make sure it hasn't already been inserted
+    // Insert into list, make sure it hasn't already been inserted
     if (remove || !$cur_joke_form || $cur_joke_form.length == 0) {
       var insert_str = '<div class="joke_cell"></div>';
       if (insert_id == '+') {
@@ -267,33 +320,30 @@ function onJokeEvent(event, insert_id) {
         var $prev_div = $prev_joke_form.closest('.joke_cell');
         $prev_div.before(insert_str);
         var $new_div = $prev_div.prev();
-      } else {
-        $mp_div.fadeOut(250);
       }
       if (remove) {
-        if ($cur_joke_form.length > 0) {
+        // Remove from list, make sure it exists in list
+        if ($cur_joke_form && $cur_joke_form.length > 0) {
           var $joke_cell = $cur_joke_form.closest('.joke_cell');
+          fadeOutPacifier = false;
           $joke_cell.slideUp(250, function() {
             // If user voted on this joke, update the popup
             var userSubmitted = false;
-            var $voted_joke_div = $jokes_frame.contents().find('#voted_joke_id');
+            var $voted_joke_div = $('#voted_joke_id');
             if ($voted_joke_div.text() == event.joke_id) {
               userSubmitted = true;
               $voted_joke_div.remove();
-              var $mp_div = window.top.$('#master_popup');
+              var $mp_div = $('#master_popup');
               $mp_div.text('Re-ranking...');
             } 
             $joke_cell.remove();
+            // Show joke in new position
             $new_div.hide().load('/jokes/'+event.joke_id+' #one_joke', '', function(){
               $new_div.slideDown(500, function(){
-                // Handle vote buttons
-                $new_div.find('.vote_button').click(onVote);
-                // Handle remove links
-                $new_div.find('#remove_joke').click(onRemove);
                 // If user voted on this joke, jump to it
                 if (userSubmitted) {
-                  // Remove submitting popup
-                  var $mp_div = window.top.$('#master_popup');
+                  // Remove submitting popup, then jump to the new joke
+                  var $mp_div = $('#master_popup');
                   $mp_div.fadeOut(250, function(){
                     // Jump to it
                     jump_to_joke(event.joke_id);
@@ -302,39 +352,53 @@ function onJokeEvent(event, insert_id) {
               });
             });
           });
-        } else {
-          $mp_div.fadeOut(250);
         }
       } else {
+        // Not removing, just inserting
         if (insert_id != -1) {
+          // Load 
+          fadeOutPacifier = false;
           $new_div.hide().load('/jokes/'+event.joke_id+' #one_joke', '', function(){
             $new_div.slideDown(500, function(){
-               // Handle vote buttons
-               $new_div.find('.vote_button').click(onVote);
-               // Handle remove links
-               $new_div.find('#remove_joke').click(onRemove);
               // If user just submitted this joke, jump to it
-              var $new_joke_content_div = $jokes_frame.contents().find('#new_joke_content');
+              var $new_joke_content_div = $('#new_joke_content');
               var new_content = $new_div.find('#joke_content').attr('value');
               if ($new_joke_content_div.text() == new_content) {
                 jump_to_joke(event.joke_id);
                 $new_joke_content_div.remove();
-                $jokes_frame.contents().find('.new_joke_field').removeClass('please_wait').removeAttr('readonly').inputHints(); 
+                $('.new_joke_field').removeClass('submitting').removeAttr('readonly').inputHints(); 
+                $mp_div.fadeOut(250);
               }
             });
           });
-        } else {
-          $mp_div.fadeOut(250);
-        }
+        } 
       }
     }
+  } else if (change) {
+    // The joke info changed, but is not changing position, so just reload it
+    if ($cur_joke_form && $cur_joke_form.length > 0) {
+      var $cell = $cur_joke_form.closest('.joke_cell');
+      // Do a quick fadeOut and fadeIn
+      fadeOutPacifier = false;
+      $cell.fadeTo(10, 0.5, function(){
+        $cell.load('/jokes/'+event.joke_id+' #one_joke', '', function(){ 
+          $cell.fadeTo(10, 1, function(){
+            $mp_div.fadeOut(250);
+          });
+        });
+      });
+    }
+  }
+  
+  // Fade out pacifier if needed
+  if (fadeOutPacifier && $mp_div.attr('class') == 'pacifier_popup') {
+    $mp_div.fadeOut(250);
   }
 }
 
 // Do a popup for vote submission
 function doVotingPopup($button, withdraw) {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var $mp_div = window.top.$('#master_popup');
+  var $mp_div = $('#master_popup');
   var button_pos = $button.offset();
   var buttonW = $button.outerWidth();
   var popupLeft,
@@ -345,16 +409,15 @@ function doVotingPopup($button, withdraw) {
     popupLeft = button_pos.left + buttonW + 5;
     popupTop = button_pos.top;
   } else {
-    var jokes_pos = $jokes_frame.offset();
-    var scrollTop = $jokes_frame.contents().scrollTop();
-    popupLeft = jokes_pos.left + button_pos.left + buttonW + 5;
-    popupTop = jokes_pos.top + button_pos.top - scrollTop;
+    var scrollTop = $(document).scrollTop();
+    popupLeft = button_pos.left + buttonW + 5;
+    popupTop = button_pos.top - scrollTop;
   }
-  $mp_div.empty().addClass('submit_popup');
+  $mp_div.empty().attr('class', 'pacifier_popup');
   if (withdraw) {
     $mp_div.text('Withdrawing your vote, please wait...');
   } else {
-    $mp_div.text('Submitting your vote, please wait...').addClass('submit_popup');
+    $mp_div.text('Submitting your vote, please wait...');
   }
   $mp_div.unbind('mouseleave');
   $mp_div.css({
@@ -367,8 +430,8 @@ function doVotingPopup($button, withdraw) {
 
 // Do a popup for joke deletion
 function doRemovePopup(left, top) {
-  var $mp_div = window.top.$('#master_popup');
-  $mp_div.empty().addClass('submit_popup');
+  var $mp_div =$('#master_popup');
+  $mp_div.empty().attr('class', 'pacifier_popup');
   $mp_div.text('Deleting, please wait...');
   $mp_div.css({
     left: left,
@@ -382,11 +445,10 @@ function doRemovePopup(left, top) {
 // Handle joke submission
 function onSubmitJoke() {
   var $this = $(this);
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
-  var url = $this.attr('href');
+  var url = $this.attr('action');
   var $joke_input = $('#joke_content');
   var content = $joke_input.attr('value');
-  $joke_input.addClass('please_wait').attr('value', 'Submitting, please wait...').attr('readonly', 'readonly');
+  $joke_input.addClass('submitting').attr('value', 'Submitting, please wait...').attr('readonly', 'readonly');
   $('#jokes').prepend('<div id="new_joke_content" style="display:none">'+content+'</div>');
   $.post(url, { joke: { content: content }}, function(){
     // Get recent events, this should precipitate the appropriate screen update
@@ -397,7 +459,6 @@ function onSubmitJoke() {
 
 // Handle votes
 function onVote() {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
   var $this = $(this);
   var text = $this.attr('value');
   var vote = (text=='Vote Yes') ? true : ((text=='Vote No') ? false : null);
@@ -416,7 +477,7 @@ function onVote() {
     data = { vote: { yesno: vote, joke_id: joke_id }};
   }  
   var url = $parent.attr('action');
-  $jokes_frame.contents().find('#jokes').prepend('<div id="voted_joke_id" style="display:none">'+joke_id+'</div>');
+  $('#jokes').prepend('<div id="voted_joke_id" style="display:none">'+joke_id+'</div>');
   doVotingPopup($this, vote==null);
   $.ajax({
     type: method,
@@ -432,20 +493,18 @@ function onVote() {
 
 // Handle joke removal confirmation popup
 function onRemove() {
-  var $jokes_frame = window.top.$('#header_and_jokes_frame').contents().find('#jokes_frame');
   var $this=$(this);
-  var $mp_div = window.top.$('#master_popup');
-  var $link=$this.find('a');
+  var $mp_div = $('#master_popup');
   var dlgLeft, dlgTop;
-  var linkPos = $link.offset(),
-      linkW = $link.outerWidth(),
+  var linkPos = $this.offset(),
+      linkW = $this.innerWidth(),
       dlgW = $mp_div.outerWidth(),
       dlgH = $mp_div.outerHeight(),
       screenH=$(window).height();
-  var master_popup = $link.closest('#master_popup').length > 0;
+  var master_popup = $this.closest('#master_popup').length > 0;
   $mp_div.empty();
-  $delete_confirm = $jokes_frame.contents().find('#delete_confirm_popup');
-  $mp_div.html($delete_confirm.html());
+  $delete_confirm = $('#delete_confirm_popup');
+  $mp_div.hide().html($delete_confirm.html());
   if (master_popup) {
     // Means button pressed from event popup, since the popup floats above all frames,
     // we can just use the raw position of the button
@@ -457,16 +516,15 @@ function onRemove() {
       dlgTop = 0;
     }
   } else {
-    jokes_pos = $jokes_frame.offset(),
-    scrollTop=$jokes_frame.contents().scrollTop();      
-    dlgLeft = jokes_pos.left + linkPos.left + linkW + 5;
-    dlgTop = jokes_pos.top + linkPos.top - scrollTop;
-    if (dlgTop + dlgH > screenH - jokes_pos.top) {
-      dlgTop = screenH - jokes_pos.top - dlgH;
+    scrollTop=$(document).scrollTop();      
+    dlgLeft = linkPos.left + linkW + 5;
+    dlgTop = linkPos.top - scrollTop;
+    if (dlgTop + dlgH > screenH) {
+      dlgTop = screenH - dlgH;
     }
   }
-  $mp_div.data('url', $link.attr('href'));
-  $mp_div.attr('class', 'delete_confirm_popup').css({
+  $mp_div.data('url', $this.attr('href'));
+  $mp_div.attr('class', 'pacifier_popup').css({
     left: dlgLeft,
     top: dlgTop,
     position: 'absolute'
@@ -486,7 +544,7 @@ function onRemove() {
 
 // Handle joke removal
 function onYesRemove() {
-  var $mp_div = window.top.$('#master_popup');
+  var $mp_div = $('#master_popup');
   var url = $mp_div.data('url');
   var left = $mp_div.data('left');
   var top = $mp_div.data('top');

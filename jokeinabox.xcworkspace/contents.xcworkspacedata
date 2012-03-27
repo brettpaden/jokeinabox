@@ -18,6 +18,12 @@
             location = "group:javascripts"
             name = "javascripts">
             <FileRef
+               location = "group:main.js">
+            </FileRef>
+            <FileRef
+               location = "group:header.js">
+            </FileRef>
+            <FileRef
                location = "group:application.js">
             </FileRef>
             <FileRef
@@ -150,6 +156,9 @@
             <FileRef
                location = "group:show.html.erb">
             </FileRef>
+            <FileRef
+               location = "group:_events.html.erb">
+            </FileRef>
          </Group>
          <Group
             location = "group:users"
@@ -209,6 +218,12 @@
             </FileRef>
             <FileRef
                location = "group:main.html.erb">
+            </FileRef>
+            <FileRef
+               location = "group:_jokes.html.erb">
+            </FileRef>
+            <FileRef
+               location = "group:main.html.erb.old">
             </FileRef>
             <FileRef
                location = "group:header_and_jokes.html.erb">

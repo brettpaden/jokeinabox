@@ -87,6 +87,7 @@ $log.debug(params[:id])
     @joke.destroy
     @event = Event.new(:user_id => session[:user].id, :joke_id => @joke.id)
     @event.save
+$log.debug("new deletion event: #{@event.inspect}")
     
     respond_to do |format|
       format.html { redirect_to jokes_url }

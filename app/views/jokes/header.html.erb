@@ -1,19 +1,4 @@
-<script>
-
-$(function() {
-  // Master popup seems to need to display once or it gives incorrect size
-  // on first real display, not sure why...
-  window.top.$('#master_popup').hide().text('x');
-
-  // Handle logout/login/join links
-  $('#logout').click(onLogout);
-  $('#login').click(onLoginPopup);
-  $('#join').click(onJoinPopup);
-});
-
-</script>
-
-<div class="header_bar">
+<div class="header_bar" id="header_bar">
   <table>
     <tr>
       <td class="my_name">Joke In A Box</td>
