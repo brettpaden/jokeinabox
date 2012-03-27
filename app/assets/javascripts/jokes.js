@@ -306,7 +306,7 @@ function onJokeEvent(event, insert_id) {
           $mp_div.fadeOut(250);
         }
       } else {
-        if (insert_id >= 0) {
+        if (insert_id != -1) {
           $new_div.hide().load('/jokes/'+event.joke_id+' #one_joke', '', function(){
             $new_div.slideDown(500, function(){
                // Handle vote buttons
