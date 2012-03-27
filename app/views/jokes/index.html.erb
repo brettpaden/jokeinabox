@@ -1,65 +1,40 @@
-<script>
-$(function() {
-
-  // Set new joke input to display hint text
-  $('.new_joke_field').inputHints(); 
-  
-  // Handle tab panels
-  $('.tabs a').click(onTab);
-  $('.tabs li:first a').click();
-  
-  // Handle joke buttons
-  $('#new_joke').submit(onSubmitJoke);
-  
-  // WARNING: any events bound to controls within the panel container need to be
-  // bound every time the container is refreshed (after a tab is clicked),
-  // binding set here will be erased!!!!  Found this out the hard way...
-});
-</script>
-
 <% u = session[:user] %>
 
 <div id="jokes">
-<table>
-  <tr>
-    <td valign="top" width="775px">
-      <div class="new_joke">
-        <div id="new_joke_div" style="<%= u ? '' : 'display:none;' %>">
-          <% @joke = Joke.new %>
-          <%= render 'form' %>
-        </div>
-        <div id="login_to_tell_div" style="<%= u ? 'display:none;' : '' %>">
-          <h2 class='indented'><%= "You gotta be logged in to tell us a joke, funny man!" %></h2>
-        </div>
-      </div>
+  <div class="new_joke">
+    <div id="new_joke_div" class="new_joke" style="<%= u ? '' : 'display:none;' %>">
+      <% @joke = Joke.new %>
+      <%= render 'form' %>
+    </div>
+    <div id="login_to_tell_div" style="<%= u ? 'display:none;' : '' %>">
+      <h2 class='indented'><%= "You gotta be logged in to tell us a joke, funny man!" %></h2>
+    </div>
+  </div>
 
-      <div class="indented">
-        <div class="tabbedPanels">
-          <ul class="tabs">
-            <li class="leftmost" id="top_jokes_tab">
-              <%= link_to('Top Jokes', jokes_path+'?what=top') %>
-            </li>
-            <li id="my_jokes_tab" style="<%= u ? '' : 'display:none;' %>">
-              <%= link_to('My Jokes', jokes_path+'?what=mine') %>
-            </li>
-            <li id="recent_jokes_tab">
-              <%= link_to('Recent Jokes', jokes_path+'?what=recent') %>
-            </li>
-          </ul>
+  <div class="indented">
+    <div class="tabbedPanels">
+      <ul class="tabs">
+        <li class="leftmost" id="top_jokes_tab">
+          <%= link_to('Top Jokes', jokes_path+'?what=top') %>
+        </li>
+        <li id="my_jokes_tab" style="<%= u ? '' : 'display:none;' %>">
+          <%= link_to('My Jokes', jokes_path+'?what=mine') %>
+        </li>
+        <li id="recent_jokes_tab">
+          <%= link_to('Recent Jokes', jokes_path+'?what=recent') %>
+        </li>
+      </ul>
 
-        <div class="panelContainer">
-          <div class="panel">
-            <% @jokes.each do |joke| %>
-              <div class="joke_cell">
-                <%= render :partial => 'one_joke', :locals => {:joke => joke, :u => u} %>
-              </div>
-            <% end %>
-          </table>
-        </div>
+    <div class="panelContainer">
+      <div class="panel">
+        <% @jokes.each do |joke| %>
+          <div class="joke_cell">
+            <%= render :partial => 'one_joke', :locals => {:joke => joke, :u => u} %>
+          </div>
+        <% end %>
       </div>
-    </td>
-  </tr>
-</table>
+  </div>
+</div>
 <div id="delete_confirm_popup" style="display:none">
   <table>
     <tr>
@@ -72,5 +47,4 @@ $(function() {
       </td>
     </tr>
   </table>
-</div>
 </div>

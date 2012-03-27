@@ -39,3 +39,10 @@
     color: $light_gray;
   }
 }
+
+.events_div {
+  overflow: auto;
+  top: 0px;
+  left: 800px;
+  position: absolute;
+}

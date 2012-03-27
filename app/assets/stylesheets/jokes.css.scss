@@ -4,6 +4,12 @@
 
 @import "color_theme";
 
+.loading {
+  color: $dark_gray;
+  text-align: center;
+  font-size: 18px;
+}
+
 .my_body {
   background: $light-blue;
   margin: 0; 
@@ -22,6 +28,24 @@
 
 .header_bar {
   background-color: $dark-purple;
+  padding: 5px;
+}
+
+.header_div {
+  left: 0px;
+  top: 0px;
+  width: 780px;
+  position: absolute;
+}
+
+.jokes_div {
+  overflow: auto;
+  left: 0px;
+  top: 50px;
+  width: 775px;
+  height: 100px;
+  position: absolute;
+  overflow: auto;
 }
 
 .my_name {
@@ -130,7 +154,7 @@
 }
 
 .new_joke {
-  padding: 0;
+  padding: 1px;
   margin: 0;
   border: 0;
 }
@@ -182,12 +206,6 @@
 
 .hint {
   color: gray;
-}
-
-.please_wait {
-  background-color: $light_yellow;
-  color: gray;
-  text-align: center;
 }
 
 .joke_cell {
@@ -340,15 +358,24 @@
   }
 }
 
-.submit_popup {
+@mixin pacifying {
   color: $dark_gray;
   background-color: $light_yellow;
+  text-align: center;
+}
+
+.pacifier_popup {
+  @include pacifying;
   border: {
     style: solid;
     width: 1px;
     radius: 5px;
   }
   padding: 5px;
+}
+
+.submitting {
+  @include pacifying;
 }
 
 .delete_confirm_popup {

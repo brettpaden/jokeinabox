@@ -103,6 +103,8 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
+$log.debug("DESTROYING AN EVENT!!!")
+
     @event = Event.find(params[:id])
     @event.destroy
 

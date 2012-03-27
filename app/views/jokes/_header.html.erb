@@ -1,21 +1,26 @@
-<div class="header_bar">
-  <table>
-    <tr>
-      <td class="my_name">Joke In A Box</td>
-      <td class="header_center">
-        <% if welcome_ok then %>
-          <%= "Welcome, #{u.name.capitalize}!" if u %>
-        <% end %>
-      </td>
-      <td class="header_right">
-        <% if login_ok then %>
-          <%= u ? link_to('Logout', logout_users_path, :class => 'header_link', :method => :post) : link_to('Login', login_users_path, :class => 'header_link') %>
-        <% end %>
-        <% if !u && join_ok then %>
-          <span class="header_sep_text">| </span><%= link_to('Join', new_user_path, :class => 'header_link')%>       
-        <% end %>
-      </td>
-    </tr>
-  </table>
-</div>
+<table>
+  <tr>
+    <td class="my_name">Joke In A Box</td>
+    <td class="header_center">
+      <% if !session[:user].nil? %>
+        <%= "Welcome, #{session[:user].name.capitalize}!" %>
+      <% end %>
+    </td>
+    <td class="header_right">
+      <% if session[:user] then %>
+        <span id="logout">
+          <%= link_to('Logout', logout_users_path, :class => 'header_link') %>
+        </span>
+      <% else %>
+        <span id="login">
+          <%= link_to('Login', login_users_path, :class => 'header_link') %>
+        </span>
+        <span class="header_sep_text">| </span>
+        <span id="join">
+          <%= link_to('Join', new_user_path, :class => 'header_link')%>  
+        </span>
+      <% end %>
+    </td>
+  </tr>
+</table>
 
