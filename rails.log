@@ -23640,3 +23640,15 @@ DELETE OK
 CREATING
 #<Vote id: nil, joke_id: 91, user_id: 27, yesno: true, created_at: nil, updated_at: nil>
 SAVE OK
+CREATING
+#<Vote id: nil, joke_id: 2, user_id: 2, yesno: true, created_at: nil, updated_at: nil>
+SAVE OK
+CREATING
+#<Vote id: nil, joke_id: 1, user_id: 2, yesno: true, created_at: nil, updated_at: nil>
+SAVE OK
+CREATING
+#<Vote id: nil, joke_id: 5, user_id: 1, yesno: false, created_at: nil, updated_at: nil>
+SAVE OK
+CREATING
+#<Vote id: nil, joke_id: 4, user_id: 1, yesno: false, created_at: nil, updated_at: nil>
+SAVE OK
