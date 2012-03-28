@@ -64,9 +64,9 @@ function jump_to_joke(joke_id) {
     var windowH = window.innerHeight;
     var windowSpace = scrollTop + windowH;
     if ((pos.top < scrollTop) || (pos.top + jokeH > windowSpace)) {
-      $('html, body').animate({
-                              scrollTop: pos.top 
-                              }, 500);
+      $('#jokes_div').animate({
+        scrollTop: pos.top 
+      }, 500);
     }
     $joke_forms.first().find('.joke').first().focus();
   }
