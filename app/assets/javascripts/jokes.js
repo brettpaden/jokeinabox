@@ -55,27 +55,30 @@ function jump_to_joke(joke_id) {
   var $pc = $('.panelContainer');
   var $joke_forms = $pc.find('#'+id);
   if ($joke_forms.length != 0) {
-    var $mp_div = $('#master_popup');
-    $mp_div.fadeOut(50);
     var $joke_cell = $joke_forms.first().closest('.joke_cell'),
         windowH = $(window).outerHeight(),
         headerH = $('#header_div').outerHeight(),
         pos = $joke_cell.offset().top,
         jokeH = $joke_cell.outerHeight(),
         scrollTop = $('#jokes_div').scrollTop();
+    var newScrollTop = scrollTop;
     if (pos<headerH) {
-      scrollTop -= headerH - pos;
-      $('#jokes_div').animate({
-        scrollTop: scrollTop
-      }, 500);
+      newScrollTop -= headerH - pos;
     } else if (pos + jokeH > windowH) {
-      scrollTop += pos + jokeH - windowH;
-      $('#jokes_div').animate({
-        scrollTop: scrollTop
-      }, 500);
+      newScrollTop += pos + jokeH - windowH;
     }
-    $joke_forms.first().find('.joke').first().focus();
+    if (newScrollTop != scrollTop) {
+      $('#jokes_div').animate({
+        scrollTop: newScrollTop
+      }, 500, function(){
+      });
+    }
   }
+  // Fade out tool tip
+  var $mp_div = $('#master_popup');
+  $mp_div.fadeOut(50);
+  // Set focus
+  $joke_forms.first().find('.joke').first().focus();
 }
 
 function doJokeEvents($obj) {
