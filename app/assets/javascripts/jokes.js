@@ -71,6 +71,12 @@ function jump_to_joke(joke_id) {
       $('#jokes_div').animate({
         scrollTop: newScrollTop
       }, 500, function(){
+        // Clear popup timer
+        var $mp_div = $('#master_popup');
+        var timer = $mp_div.data('timerid');
+        if (timer != null) {
+          window.clearTimeout(timer);
+        }
       });
     }
   }

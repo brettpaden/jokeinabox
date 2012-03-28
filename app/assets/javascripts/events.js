@@ -100,9 +100,9 @@ function onJokePopup($popup, $trigger) {
 // Handle mouseover on an event
 function mouseOverEvent() {
   var $this=$(this);
-  $this.data('timer', null);
+  var $mp_div = $('#master_popup');
+  $mp_div.data('timer', null);
   var timer = window.setTimeout(function() {
-    var $mp_div = $('#master_popup');
     $mp_div.empty();
     var tt_text = $this.attr('data-tooltip');
     if (tt_text == 'deleted') {
@@ -116,14 +116,14 @@ function mouseOverEvent() {
       });
     }
   }, 50);
-  $this.data('timerid', timer);
+  $mp_div.data('timerid', timer);
 }
 
 // Handle mouseout on an event
 function mouseOutEvent(e) {
   var $this = $(this);
-  var mp_div = $('#master_popup');
-  var timer = $this.data('timerid');
+  var $mp_div = $('#master_popup');
+  var timer = $mp_div.data('timerid');
   if (timer != null) {
     window.clearTimeout(timer);
   }
@@ -138,7 +138,8 @@ function onEventJoke() {
   var $this = $(this);
   
   // Clear popup timer
-  var timer = $this.parent().data('timerid');
+  var $mp_div = $('#master_popup');
+  var timer = $mp_div.data('timerid');
   if (timer != null) {
     window.clearTimeout(timer);
   }
