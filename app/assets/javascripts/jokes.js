@@ -57,15 +57,21 @@ function jump_to_joke(joke_id) {
   if ($joke_forms.length != 0) {
     var $mp_div = $('#master_popup');
     $mp_div.fadeOut(50);
-    var $joke_div = $joke_forms.first().closest('.one_joke');
-    var pos = $joke_div.offset();
-    var jokeH = $joke_div.outerHeight();
-    var scrollTop = $(document).scrollTop();
-    var windowH = window.innerHeight;
-    var windowSpace = scrollTop + windowH;
-    if ((pos.top < scrollTop) || (pos.top + jokeH > windowSpace)) {
+    var $joke_cell = $joke_forms.first().closest('.joke_cell'),
+        windowH = $(window).outerHeight(),
+        headerH = $('#header_div').outerHeight(),
+        pos = $joke_cell.offset().top,
+        jokeH = $joke_cell.outerHeight(),
+        scrollTop = $('#jokes_div').scrollTop();
+    if (pos<headerH) {
+      scrollTop -= headerH - pos;
       $('#jokes_div').animate({
-        scrollTop: pos.top 
+        scrollTop: scrollTop
+      }, 500);
+    } else if (pos + jokeH > windowH) {
+      scrollTop += pos + jokeH - windowH;
+      $('#jokes_div').animate({
+        scrollTop: scrollTop
       }, 500);
     }
     $joke_forms.first().find('.joke').first().focus();
