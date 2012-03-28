@@ -137,6 +137,12 @@ function mouseOutEvent(e) {
 function onEventJoke() {
   var $this = $(this);
   
+  // Clear popup timer
+  var timer = $this.parent().data('timerid');
+  if (timer != null) {
+    window.clearTimeout(timer);
+  }
+  
   // Extract joke id and jump to it if possible
   var parts = $(this).parent().attr('id').split('_');
   var joke_id = parts[1].substr(1);

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   def initialize 
     super
-    $log = Logger.new("/u/colin/rails.log")
+    $log = Logger.new("/Users/cstryker/rails.log")
     $log.level = Logger::DEBUG
   end
   
