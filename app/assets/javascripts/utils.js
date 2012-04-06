@@ -60,3 +60,19 @@ function dump(arr,level) {
   return dumped_text;
 } 
 
+// Capitalize string
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+//pads left
+String.prototype.lpad = function(padString, length) {
+	var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+// Format date mm/dd/yyyy hh:mm 
+Date.prototype.std_format = function() {
+  return (this.getMonth()+1) + '/' + this.getDate() + '/' + this.getFullYear() + ' ' + this.getHours().toString().lpad('0', 2) + ':' + this.getMinutes().toString().lpad('0', 2);
+}

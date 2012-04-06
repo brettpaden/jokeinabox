@@ -19,7 +19,6 @@ class JokesController < ApplicationController
   # GET /jokes/1
   # GET /jokes/1.json
   def show
-$log.debug(params[:id])
     @joke = Joke.find(params[:id])
 
     respond_to do |format|
@@ -87,7 +86,6 @@ $log.debug(params[:id])
     @joke.destroy
     @event = Event.new(:user_id => session[:user].id, :joke_id => @joke.id)
     @event.save
-$log.debug("new deletion event: #{@event.inspect}")
     
     respond_to do |format|
       format.html { redirect_to jokes_url }
@@ -102,12 +100,94 @@ $log.debug("new deletion event: #{@event.inspect}")
       format.json { head :ok }
     end
   end
+  
+  # GET /jokes/data
+  def data
+    # Build a single JSON object representing all data that a client will be
+    # interested in for displaying a single screen
+    # This consists of: 
+    #  - current user
+    #  - displayed jokes
+    #  - those jokes' users (creators)
+    #  - the current user's votes
+    #  - the most recent 50 events, or events more recent than timestamp param, if provided
+    #  - all jokes relevant to those events
+    #  - all users relevant to those events
+    info = {:jokes => [], :users => [], :votes => [], :events => []}
+    
+    # Get current user, always the first user, could be nil
+    info[:user_id] = session[:user] ? session[:user].id : nil;
+    info[:users] << session[:user] unless !session[:user];
+    
+    # Get all displayed jokes
+    info[:jokes] = Joke.jokes_by_what(params[:what], info[:user_id])
 
-  # GET /jokes/header_and_jokes
-  def header_and_jokes
+    # Get those jokes' creators
+    info[:jokes].each do |j| 
+      u = info[:users].find {|u| u.id == j.user_id}
+      info[:users] << j.user unless u
+    end
+
+    # Get current user's votes
+    info[:votes] = Vote.votes_by_user(info[:user_id]) if info[:user_id]
+    
+    # Get 50 most recent events
+    info[:events] = Event.events_by_ts(params[:ts], 50)
+    
+    # Get associated jokes
+    info[:events].each do |e| 
+      if e.joke_id
+        j = info[:jokes].find{|j| j.id == e.joke_id}
+        info[:jokes] << e.joke unless (j || !e.joke)
+      end
+    end
+    
+    # Get associated users
+    info[:events].each do |e|
+      u = info[:users].find{|u| u.id == e.user_id}
+      info[:users] << e.user unless (u || !e.user)
+    end
+    
+    respond_to do | format|
+      format.html
+      format.json { render json: info }
+    end
+  end 
+  
+  # GET /jokes/top
+  def top
+    @jokes = Joke.jokes_by_what('top', session[:user] ? session[:user].id : nil)
+    session[:what] = 'top'
+
     respond_to do |format|
-      format.html 
-      format.json { head :ok }
+      format.html { redirect_to jokes_path }
+      format.json { render json: @jokes }
     end
   end
+  
+  # GET /jokes/mine
+  def mine
+    @jokes = Joke.jokes_by_what('mine', session[:user] ? session[:user].id : nil)
+    session[:what] = 'mine'
+
+    respond_to do |format|
+      format.html { redirect_to jokes_path }
+      format.json { render json: @jokes }
+    end
+  end
+  
+  # GET /jokes/recent
+  def recent
+    @jokes = Joke.jokes_by_what('recent', session[:user] ? session[:user].id : nil)
+    session[:what] = 'recent'
+
+    respond_to do |format|
+      format.html { redirect_to jokes_path }
+      format.json { render json: @jokes }
+    end
+  end
+  
+  
 end
+
+

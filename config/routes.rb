@@ -2,6 +2,10 @@ Jokeinabox::Application.routes.draw do
 
   get 'header', :controller => 'jokes', :action => 'header'
   get 'header_and_jokes', :controller => 'jokes', :action => 'header_and_jokes'
+  get 'data', :controller => 'jokes', :action => 'data'
+  get 'mine', :controller => 'jokes', :action => 'mine'
+  get 'top', :controller => 'jokes', :action => 'top'
+  get 'recent', :controller => 'recent', :action => 'recent'
   
   resources :users do
     collection do

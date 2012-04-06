@@ -1,0 +1,56 @@
+<div id="jokes">
+  <div class="new_joke">
+    <div id="new_joke_div" class="new_joke" style="<%= session_user ? '' : 'display:none;' %>">
+      <% var joke = new Joke(); %>
+      <form accept-charset="UTF-8" action="/jokes" class="new_joke" id="new_joke" method="post">
+        <div class="field">
+          <textarea class="new_joke_field" cols="40" id="joke_content" name="joke[content]" rows="20" title="Tell us a new joke, funny man!"></textarea>
+        </div>
+        <div class="actions">
+          <table><tr><td width="750px" align="right">
+            <input class="action_button" name="commit" type="submit" value="Submit">
+           </td></tr></table>
+        </div>
+      </form>
+    </div>
+    <div id="login_to_tell_div" style="<%= session_user ? 'display:none;' : '' %>">
+      <h2 class="indented"><%= "You gotta be logged in to tell us a joke, funny man!" %></h2>
+    </div>
+  </div>
+
+  <div class="indented">
+    <div class="tabbedPanels">
+      <ul class="tabs">
+        <li class="leftmost" id="top_jokes_tab">
+          <a href="/jokes?what=top">Top Jokes</a>
+        </li>
+        <li id="my_jokes_tab" style="<%= session_user ? '' : 'display:none;' %>">
+          <a href="/jokes?what=mine">My Jokes</a>
+        </li>
+        <li id="recent_jokes_tab">
+          <a href="/jokes?what=recent">Recent Jokes</a>
+        </li>
+      </ul>
+    </div>
+    <div class="panelContainer">
+      <div id="jokes_panel" class="panel">
+      </div>
+    </div>
+  </div>
+</div>
+<div id="delete_confirm_popup" style="display:none">
+  <table>
+    <tr>
+      <td>Aw, c'mon joker, give this joke a chance! Do you really want to delete this joke?</td>
+    </tr>
+    <tr>
+      <td style="text-align:center">
+        <input type="button" id="remove_yes" value="Yes, I Do!" class="delete_confirm_button">
+        <input type="button" id="remove_no" value="No, I'll Give It A Chance" class="delete_confirm_button">
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+

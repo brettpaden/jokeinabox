@@ -12,4 +12,8 @@ class Vote < ActiveRecord::Base
   def vote_text
     yesno ? 'Yes' : 'No'
   end
+
+  def self.votes_by_user(uid)
+    find(:all, :conditions => "user_id = #{uid}")
+  end
 end

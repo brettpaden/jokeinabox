@@ -8,15 +8,67 @@
          location = "group:assets"
          name = "assets">
          <Group
-            location = "group:images"
-            name = "images">
-            <FileRef
-               location = "group:rails.png">
-            </FileRef>
-         </Group>
-         <Group
             location = "group:javascripts"
             name = "javascripts">
+            <Group
+               location = "group:backbone"
+               name = "backbone">
+               <FileRef
+                  location = "group:main_backbone.js">
+               </FileRef>
+               <Group
+                  location = "group:collections"
+                  name = "collections">
+                  <FileRef
+                     location = "group:users_c.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:jokes_c.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:votes_c.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:events_c.js">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:models"
+                  name = "models">
+                  <FileRef
+                     location = "group:user.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:joke.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:vote.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:event.js">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:routers"
+                  name = "routers">
+               </Group>
+               <Group
+                  location = "group:views"
+                  name = "views">
+                  <FileRef
+                     location = "group:header_view.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:login_view.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:jokes_view.js">
+                  </FileRef>
+                  <FileRef
+                     location = "group:events_view.js">
+                  </FileRef>
+               </Group>
+            </Group>
             <FileRef
                location = "group:main.js">
             </FileRef>
@@ -49,6 +101,13 @@
             </FileRef>
             <FileRef
                location = "group:votes.js.coffee">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:images"
+            name = "images">
+            <FileRef
+               location = "group:rails.png">
             </FileRef>
          </Group>
          <Group
@@ -235,6 +294,32 @@
             <FileRef
                location = "group:application.html.erb">
             </FileRef>
+            <FileRef
+               location = "group:../../../config/assets.yml">
+            </FileRef>
+            <Group
+               location = "group:assets"
+               name = "assets">
+               <FileRef
+                  location = "group:common.js">
+               </FileRef>
+               <FileRef
+                  location = "group:common.js.gz">
+               </FileRef>
+            </Group>
+            <Group
+               location = "group:javascripts"
+               name = "javascripts">
+               <FileRef
+                  location = "group:backbone.js">
+               </FileRef>
+               <FileRef
+                  location = "group:underscore.js">
+               </FileRef>
+               <FileRef
+                  location = "group:json2.js">
+               </FileRef>
+            </Group>
          </Group>
          <Group
             location = "group:votes"
@@ -364,273 +449,6 @@
       location = "group:Gemfile.lock">
    </FileRef>
    <Group
-      location = "group:jokeinabox"
-      name = "jokeinabox">
-      <Group
-         location = "group:app"
-         name = "app">
-         <Group
-            location = "group:assets"
-            name = "assets">
-            <Group
-               location = "group:images"
-               name = "images">
-               <FileRef
-                  location = "group:rails.png">
-               </FileRef>
-            </Group>
-            <Group
-               location = "group:javascripts"
-               name = "javascripts">
-               <FileRef
-                  location = "group:application.js">
-               </FileRef>
-            </Group>
-            <Group
-               location = "group:stylesheets"
-               name = "stylesheets">
-               <FileRef
-                  location = "group:application.css">
-               </FileRef>
-            </Group>
-         </Group>
-         <Group
-            location = "group:controllers"
-            name = "controllers">
-            <FileRef
-               location = "group:application_controller.rb">
-            </FileRef>
-         </Group>
-         <Group
-            location = "group:helpers"
-            name = "helpers">
-            <FileRef
-               location = "group:application_helper.rb">
-            </FileRef>
-         </Group>
-         <Group
-            location = "group:mailers"
-            name = "mailers">
-         </Group>
-         <Group
-            location = "group:models"
-            name = "models">
-         </Group>
-         <Group
-            location = "group:views"
-            name = "views">
-            <Group
-               location = "group:layouts"
-               name = "layouts">
-               <FileRef
-                  location = "group:application.html.erb">
-               </FileRef>
-            </Group>
-         </Group>
-      </Group>
-      <Group
-         location = "group:config"
-         name = "config">
-         <FileRef
-            location = "group:application.rb">
-         </FileRef>
-         <FileRef
-            location = "group:boot.rb">
-         </FileRef>
-         <FileRef
-            location = "group:database.yml">
-         </FileRef>
-         <FileRef
-            location = "group:environment.rb">
-         </FileRef>
-         <Group
-            location = "group:environments"
-            name = "environments">
-            <FileRef
-               location = "group:development.rb">
-            </FileRef>
-            <FileRef
-               location = "group:production.rb">
-            </FileRef>
-            <FileRef
-               location = "group:test.rb">
-            </FileRef>
-         </Group>
-         <Group
-            location = "group:initializers"
-            name = "initializers">
-            <FileRef
-               location = "group:backtrace_silencers.rb">
-            </FileRef>
-            <FileRef
-               location = "group:inflections.rb">
-            </FileRef>
-            <FileRef
-               location = "group:mime_types.rb">
-            </FileRef>
-            <FileRef
-               location = "group:secret_token.rb">
-            </FileRef>
-            <FileRef
-               location = "group:session_store.rb">
-            </FileRef>
-            <FileRef
-               location = "group:wrap_parameters.rb">
-            </FileRef>
-         </Group>
-         <Group
-            location = "group:locales"
-            name = "locales">
-            <FileRef
-               location = "group:en.yml">
-            </FileRef>
-         </Group>
-         <FileRef
-            location = "group:routes.rb">
-         </FileRef>
-      </Group>
-      <FileRef
-         location = "group:config.ru">
-      </FileRef>
-      <Group
-         location = "group:db"
-         name = "db">
-         <FileRef
-            location = "group:seeds.rb">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:doc"
-         name = "doc">
-         <FileRef
-            location = "group:README_FOR_APP">
-         </FileRef>
-      </Group>
-      <FileRef
-         location = "group:Gemfile">
-      </FileRef>
-      <FileRef
-         location = "group:Gemfile.lock">
-      </FileRef>
-      <Group
-         location = "group:lib"
-         name = "lib">
-         <Group
-            location = "group:assets"
-            name = "assets">
-         </Group>
-         <Group
-            location = "group:tasks"
-            name = "tasks">
-         </Group>
-      </Group>
-      <Group
-         location = "group:log"
-         name = "log">
-      </Group>
-      <Group
-         location = "group:primes"
-         name = "primes">
-         <FileRef
-            location = "group:FOO">
-         </FileRef>
-         <FileRef
-            location = "group:print100primes.rb">
-         </FileRef>
-         <FileRef
-            location = "group:printNprimes.rb">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:public"
-         name = "public">
-         <FileRef
-            location = "group:404.html">
-         </FileRef>
-         <FileRef
-            location = "group:422.html">
-         </FileRef>
-         <FileRef
-            location = "group:500.html">
-         </FileRef>
-         <FileRef
-            location = "group:favicon.ico">
-         </FileRef>
-         <FileRef
-            location = "group:index.html">
-         </FileRef>
-         <FileRef
-            location = "group:robots.txt">
-         </FileRef>
-      </Group>
-      <FileRef
-         location = "group:Rakefile">
-      </FileRef>
-      <FileRef
-         location = "group:README">
-      </FileRef>
-      <FileRef
-         location = "group:README.rdoc">
-      </FileRef>
-      <Group
-         location = "group:script"
-         name = "script">
-         <FileRef
-            location = "group:rails">
-         </FileRef>
-      </Group>
-      <Group
-         location = "group:test"
-         name = "test">
-         <Group
-            location = "group:fixtures"
-            name = "fixtures">
-         </Group>
-         <Group
-            location = "group:functional"
-            name = "functional">
-         </Group>
-         <Group
-            location = "group:integration"
-            name = "integration">
-         </Group>
-         <Group
-            location = "group:performance"
-            name = "performance">
-            <FileRef
-               location = "group:browsing_test.rb">
-            </FileRef>
-         </Group>
-         <FileRef
-            location = "group:test_helper.rb">
-         </FileRef>
-         <Group
-            location = "group:unit"
-            name = "unit">
-         </Group>
-      </Group>
-      <Group
-         location = "group:vendor"
-         name = "vendor">
-         <Group
-            location = "group:assets"
-            name = "assets">
-            <Group
-               location = "group:javascripts"
-               name = "javascripts">
-            </Group>
-            <Group
-               location = "group:stylesheets"
-               name = "stylesheets">
-            </Group>
-         </Group>
-         <Group
-            location = "group:plugins"
-            name = "plugins">
-         </Group>
-      </Group>
-   </Group>
-   <Group
       location = "group:lib"
       name = "lib">
       <Group
@@ -662,6 +480,37 @@
    <Group
       location = "group:public"
       name = "public">
+      <Group
+         location = "group:assets"
+         name = "assets">
+         <FileRef
+            location = "group:one_event.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:one_joke.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:events.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:jokes.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:jokes_panel.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:common.js">
+         </FileRef>
+         <FileRef
+            location = "group:common.js.gz">
+         </FileRef>
+         <FileRef
+            location = "group:header.html.jst">
+         </FileRef>
+         <FileRef
+            location = "group:login.html.jst">
+         </FileRef>
+      </Group>
       <FileRef
          location = "group:404.html">
       </FileRef>

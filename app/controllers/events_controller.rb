@@ -4,39 +4,64 @@ class EventsController < ApplicationController
   # GET /events	
   # GET /events.json
   def index    
-    if (params[:ts])
-      t = Time.at(params[:ts].to_i)
-      condition = "created_at > '#{t.gmtime}'"
-    else 
-      condition = ''
-    end
-    
-    @events = Event.find(:all, :order => 'created_at DESC', :conditions => condition, :limit => 50)
+    # Get 50 most recent events, or events since timestamp provided in params
+    @events = Event.events_by_ts(params[:ts], 50)
 
-    # For each event concerning a joke, get the id of the following joke, 
-    # according to the passed sort method
-    events_plus_insert = []
-    if (params[:what])
-      jokes = Joke.jokes_by_what(params[:what], session[:user] ? session[:user].id : nil)
+    # Get other items of interest...
+    if params[:need_pos] || params[:need_jokes] || params[:need_users]
+      info = {:events_plus_insert => [], :jokes => [], :events => [], :users => [], :votes => []}
+      if params[:need_pos]
+       cur_jokes = Joke.jokes_by_what(params[:what], session[:user] ? session[:user].id : nil)
+      end
       @events.each do |e|
-        insert_id = -1
-        if e.joke && e.joke.id
-          ndx = jokes.find_index{|j| j.id == e.joke.id}
-          if ndx
-            if ndx < jokes.length-1
-              insert_id = jokes[ndx+1].id
-            else
-              insert_id = '+'
+        if params[:need_pos]
+          # For each event concerning a joke, get the id of the following joke, 
+          # according to the passed sort method
+          insert_id = -1
+          if e.joke && e.joke.id
+            ndx = cur_jokes.find_index{|j| j.id == e.joke.id}
+            if ndx
+              if ndx < cur_jokes.length-1
+                insert_id = cur_jokes[ndx+1].id
+              else
+                insert_id = '+'
+              end
             end
           end
+          info[:events_plus_insert] << { :insert_id => insert_id, :event => e }
         end
-        events_plus_insert << { :insert_id => insert_id, :event => e }
+                    
+        # Collect joke for each event
+        if params[:need_jokes] && e.joke_id
+          joke = info[:jokes].find {|j| j.id == e.joke_id} 
+          if !joke 
+            joke = Joke.find(e.joke_id) unless !Joke.exists?(e.joke_id)
+            info[:jokes] << joke if joke
+          end
+          # Also collect my vote for this joke
+          if joke && e.yesno != nil && e.user_id && session[:user] && e.user_id == session[:user].id
+            vote = joke.my_vote(session[:user].id);
+            info[:votes] << vote if vote
+          end
+        end
+        
+        # Collect user for each event
+        if params[:need_users] && e.user_id
+          user = info[:users].find {|u| u.id == e.user_id}
+          if !user
+            info[:users] << User.find(e.user_id) unless !User.exists?(e.user_id) 
+          end
+        end
       end
     end
-
-   respond_to do |format|
+    
+    respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: events_plus_insert }
+      if params[:need_pos] || params[:need_jokes] || params[:need_users]
+        format.json { render json: info }
+      else 
+        format.json { render json: @events }
+      end
     end
   end
 
@@ -103,8 +128,6 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
-$log.debug("DESTROYING AN EVENT!!!")
-
     @event = Event.find(params[:id])
     @event.destroy
 

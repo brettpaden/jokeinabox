@@ -52,7 +52,7 @@ class UsersController < ApplicationController
         @event = Event.new(:user_id => @user.id)
         @event.save
         format.html { redirect_to ''}
-        format.json { render json: @user.id }
+        format.json { render json: @user }
         session[:user] = @user
       else
         format.html { render action: "new" }
@@ -134,7 +134,7 @@ class UsersController < ApplicationController
       else
         session[:user] = @user
         format.html { redirect_to '' }
-        format.json { render json: @user.id}
+        format.json { render json: @user}
       end
     end
   end

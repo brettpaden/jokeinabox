@@ -1,0 +1,10 @@
+embed_assets: off
+compress_assets: off
+
+javascripts:
+  common:
+    - public/javascripts/underscore.js
+    - public/javascripts/backbone.js
+    
+
+   

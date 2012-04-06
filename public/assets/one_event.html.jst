@@ -1,0 +1,24 @@
+<div id="one_event">
+  <% var joke = event.joke || null; %>
+  <% var user = (event.user || (event.joke && event.joke.user)) || null %>
+  <% var name = user ? user.get('name').capitalize() : null %>
+  <% var vote_text = event.get('yesno') ? 'YES' : 'NO' %>
+  <% var vote_class = event.get('yesno') ? 'yes_vote' : 'no_vote' %>
+  <% var joke_link = '' %>
+  <% if (event.get('joke_id')) { %>
+    <% joke_link = '<a href="/jokes/'+event.get('joke_id')+'" class="normal_link">joke</a>' %>
+  <% } %>
+  <span class="event_time"><%= new Date(Date.parse(event.get('created_at'))).toUTCString() %><br/></span>
+  <span class="event_user"><%= name %></span><%= ' ' %>
+  <% if (event.get('yesno') != null) { %>
+    <%= " voted " %><span class="<%= vote_class %>"><%= vote_text %></span> on a <span class="trigger" data-tooltip="#tip<%= joke.cid %>" id="e<%= event.id %>_j<%= joke.cid %>"><%= joke_link %></span>.
+  <% } else if (event.get('withdraw')) { %>
+    <%= " withdrew their vote for a "%><span class="trigger" data-tooltip="#tip<%= joke.cid %>" id="e<%= joke.cid %>_j<%= joke.cid %>"><%= joke_link %></span>.
+  <% } else if (!event.get('user_id')) { %>
+    <%= " added a " %><span class="trigger" data-tooltip="#tip<%= joke.cid %>" id="e<%= event.id %>_j<%= joke.cid %>"><%= joke_link %></span>.
+  <% } else if (event.get('joke_id')) { %>
+    <%= " removed a joke." %>
+  <% } else if (event.get('user_id')) { %>
+    <%= " has joined Joke In A Box!" %>
+  <% } %>
+</div>

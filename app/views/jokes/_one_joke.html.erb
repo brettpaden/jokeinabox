@@ -61,7 +61,7 @@
           </td>
         </tr>
         <tr>
-          <td id='remove_joke'><%= if my_joke then link_to 'Remove', joke, :confirm => 'Aw, give this joke a chance! Are you sure you want to delete this joke?', :class => 'normal_link', :method => :delete end %></td>
+          <td id="remove_joke_<%= joke.id %>" class="remove_joke"><%= if my_joke then link_to 'Remove', joke, :confirm => 'Aw, give this joke a chance! Are you sure you want to delete this joke?', :class => 'normal_link', :method => :delete end %></td>
           <td align="right"><%= "By: " %><strong><%= "#{(my_joke ? 'ME' : (joke.user ? joke.user.name.capitalize : 'Nobody'))}" %></strong><%= " (#{joke.when_submitted.getlocal.strftime('%m/%d/%y %H:%M')})" %>&nbsp;</td>
         </tr>
       </table>

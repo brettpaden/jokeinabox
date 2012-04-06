@@ -3,13 +3,15 @@
 <head>
   <title>Jokeinabox</title>
   <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "jquery.min.js" %>
+  <%= javascript_include_tag :common %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
   <script>
-  $(function(){
-    main();
-  });
-</script>
+    $(function(){
+      main_backbone();
+    });
+  </script>
 
 </head>
 <body class="my_body">
